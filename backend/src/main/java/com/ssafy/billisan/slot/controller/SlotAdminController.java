@@ -1,5 +1,6 @@
 package com.ssafy.billisan.slot.controller;
 
+import com.ssafy.billisan.global.exception.AdminAccountRequiredException;
 import com.ssafy.billisan.slot.dto.SlotDetailResponse;
 import com.ssafy.billisan.slot.dto.SlotInventoryResponse;
 import com.ssafy.billisan.slot.dto.SlotListResponse;
@@ -8,6 +9,7 @@ import com.ssafy.billisan.slot.dto.SlotSummaryResponse;
 import com.ssafy.billisan.slot.service.SlotAdminService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +53,11 @@ public class SlotAdminController {
     public ResponseEntity<SlotSummaryResponse> updateStatus(
             @RequestHeader("X-Request-Id") UUID requestId,
             @PathVariable UUID slotId,
+            @AuthenticationPrincipal UUID adminId,
             @Valid @RequestBody SlotStatusUpdateRequest request) {
-        return ResponseEntity.ok(slotAdminService.updateStatus(slotId, request));
+        if (adminId == null) {
+            throw new AdminAccountRequiredException("관리자 인증이 필요합니다.");
+        }
+        return ResponseEntity.ok(slotAdminService.updateStatus(slotId, adminId, request));
     }
 }
