@@ -12,8 +12,7 @@ import { ReturnCompleteScreen } from './ReturnCompleteScreen'
 import { ReturnSlotScreen } from './ReturnSlotScreen'
 import { UmbrellaGuideScreen } from './UmbrellaGuideScreen'
 
-const UMBRELLA_STREAM_TOKEN = import.meta.env.VITE_FACE_STREAM_TOKEN
-const CAMERA_STREAM_BASE_URL = import.meta.env.VITE_CAMERA_STREAM_BASE_URL
+const CAMERA_STREAM_BASE_URL = import.meta.env.VITE_CAMERA_STREAM_BASE_URL ?? ''
 
 type UiStep =
   | 'GUIDE'
@@ -154,8 +153,8 @@ export function ReturnFlow({ sessionId, onBack }: ReturnFlowProps) {
         pendingResult.current = returnResult
         finalizeIfReady()
       })
-      .catch((error) => {
-        console.error('[Pi WS] 반납 요청 실패', error)
+      .catch(() => {
+        console.error('[Pi WS] 반납 요청 실패')
         if (awaitingDecision.current) return
         setFailed(true)
       })
@@ -285,7 +284,7 @@ export function ReturnFlow({ sessionId, onBack }: ReturnFlowProps) {
   if (step === 'CAPTURE') {
     return (
       <CameraCaptureScreen
-        streamUrl={`${CAMERA_STREAM_BASE_URL}?token=${encodeURIComponent(UMBRELLA_STREAM_TOKEN)}`}
+        streamUrl={CAMERA_STREAM_BASE_URL}
         guide={<UmbrellaGuideOverlay message={guidanceMessage} />}
         onBack={onBack}
         currentStep={3}

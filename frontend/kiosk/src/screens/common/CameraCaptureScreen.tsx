@@ -71,11 +71,14 @@ export function CameraCaptureScreen({
         />
 
         <div className="relative min-h-0 w-full flex-1 bg-black">
-          <img
-            src={streamUrl}
-            alt="카메라 스트림"
-            className="h-full w-full object-contain"
-          />
+          {streamUrl && (
+            <img
+              src={streamUrl}
+              alt="카메라 스트림"
+              className="h-full w-full object-contain"
+              referrerPolicy="no-referrer"
+            />
+          )}
           {guide}
         </div>
       </div>

@@ -22,6 +22,12 @@ public class MqttConfig {
 	@Value("${mqtt.client-id}")
 	private String clientId;
 
+	@Value("${mqtt.username:}")
+	private String username;
+
+	@Value("${mqtt.password:}")
+	private String password;
+
 	/** EDGE-* 요청/응답 페이로드를 JSON으로 주고받는 MQTT 핸들러들이 공용으로 쓴다. */
 	@Bean
 	public ObjectMapper objectMapper() {
@@ -33,6 +39,10 @@ public class MqttConfig {
 		DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
 		MqttConnectOptions options = new MqttConnectOptions();
 		options.setServerURIs(new String[] { brokerUrl });
+		if (!username.isBlank()) {
+			options.setUserName(username);
+			options.setPassword(password.toCharArray());
+		}
 		options.setCleanSession(true);
 		options.setAutomaticReconnect(true);
 		factory.setConnectionOptions(options);

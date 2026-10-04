@@ -38,7 +38,7 @@ public interface SlotRepository extends JpaRepository<Slot, UUID> {
 
     /**
      * "대여 가능한 우산이 있는 슬롯" — CLAUDE.md 신규 대여 조건(AVAILABLE+OCCUPIED+NORMAL+
-     * LOCKED)과 동일 기준. ⚠️ 재확인 필요: 이원준(Backend 2)의 재고 집계 쿼리가 이 조건에
+     * LOCKED)과 동일 기준. ⚠️ 재확인 필요: 재고 집계 담당자의 재고 집계 쿼리가 이 조건에
      * "대기 중인 REQUESTED 대여·진행 중인 DEVICE_OPERATION이 없어야 함"까지 추가로 확인하고
      * 있다면 이 카운트와 어긋날 수 있다 — RENTAL/DEVICE_OPERATION 도메인 로직이 이 브랜치에
      * 아직 없어서 그 조건은 반영하지 못했다.
@@ -51,8 +51,8 @@ public interface SlotRepository extends JpaRepository<Slot, UUID> {
             ItemCondition itemCondition);
 
     /**
-     * EDGE-RENT-001 checkout 후보 선정. 물리 상태(AVAILABLE+OCCUPIED+LOCKED+NORMAL)를 만족하면서, 
-     * 이미 다른 REQUESTED 대여가 물고 있지 않은 슬롯을 번호 오름차순으로 찾아 그중 첫 번째를 반환한다. 
+     * EDGE-RENT-001 checkout 후보 선정. 물리 상태(AVAILABLE+OCCUPIED+LOCKED+NORMAL)를 만족하면서,
+     * 이미 다른 REQUESTED 대여가 물고 있지 않은 슬롯을 번호 오름차순으로 찾아 그중 첫 번째를 반환한다.
      * 스테이션당 키오스크 1대라 요청이 겹치지 않으므로 별도 행 잠금은 쓰지 않는다.
      */
     default Optional<Slot> findRentCheckoutCandidate(UUID stationId) {
